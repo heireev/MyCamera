@@ -42,28 +42,27 @@ class CameraActivity : AppCompatActivity() {
 
         val photoFile = createFile(application)
 
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
-            imageCapture.takePicture(
-                outputOptions,
-                ContextCompat.getMainExecutor(this),
-                object : ImageCapture.OnImageCapturedCallback {
-                    override fun onError(exc: ImageCaptureException) {
-                        Toast.makeText(
-                            this@CameraActivity,
-                            "Gagal mengambil gambar.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                        Toast.makeText(
-                            this@CameraActivity,
-                            "Berhasil mengambil gambar.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+        imageCapture.takePicture(
+            outputOptions,
+            ContextCompat.getMainExecutor(this),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onError(exc: ImageCaptureException) {
+                    Toast.makeText(
+                        this@CameraActivity,
+                        "Gagal mengambil gambar.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-            )
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    Toast.makeText(
+                        this@CameraActivity,
+                        "Berhasil mengambil gambar.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        )
     }
 
     private var imageCapture: ImageCapture? = null
